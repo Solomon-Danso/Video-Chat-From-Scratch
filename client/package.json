@@ -10,12 +10,15 @@
     "@types/node": "^16.18.91",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
+    "@types/uuid": "^9.0.8",
+    "peerjs": "^1.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.7.5",
     "typescript": "^4.9.5",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

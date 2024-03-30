@@ -15,3 +15,16 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Four columns with equal width */
+  grid-gap: 10px; /* Adjust the gap between videos as needed */
+}
+
+/* Optionally, you can style the VideoPlayer component */
+.video-grid video {
+  width: 100%; /* Ensure the videos fill their grid cell */
+  height: auto; /* Maintain aspect ratio */
+}
+
