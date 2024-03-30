@@ -6,6 +6,7 @@ import {roomHandler} from "./room/index"
 
 
 const port = 8080;
+
 const app = express()
 app.use(cors)
 const server = http.createServer(app)
@@ -30,5 +31,5 @@ io.on("connection",(socket)=>{
 
 
 server.listen(port,()=>{
-    console.log("Server is listening on Port "+port);
+    console.log("Server is listening on " + port);
 });

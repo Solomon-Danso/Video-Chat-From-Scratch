@@ -28,3 +28,15 @@
   height: auto; /* Maintain aspect ratio */
 }
 
+.footer{
+ position:fixed; 
+ bottom: 0;
+ left:0;
+ right:0;
+ z-index:-1;
+ padding: 2rem;
+ display: flex;
+ justify-content: center;
+
+}
+

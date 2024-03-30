@@ -13,7 +13,14 @@ export const RoomContext = createContext<null | any>(null);
 const ws = socketIOClient(WS);
 
 export const RoomProvider: React.FunctionComponent<React.PropsWithChildren<{}>> = ({ children }) => {
-  
+
+    
+    const [me, setMe] = useState<Peer>()
+    const [stream, setStream] = useState<MediaStream>()
+    const [peers, dispatch] = useReducer(peersReducer,{})
+    const [ScreenSharingId, setScreenSharingId] = useState<string>();
+
+
     const navigate = useNavigate();
     
 const enterRoom = ({roomId}: {roomId:"string"}) =>{
@@ -27,9 +34,67 @@ const removePeer = (peerId:string) =>{
 dispatch(removePeerAction(peerId))
 }
 
-const [me, setMe] = useState<Peer>()
-const [stream, setStream] = useState<MediaStream>()
-const [peers, dispatch] = useReducer(peersReducer,{})
+const switchStream = (stream: MediaStream) =>{
+    setStream(stream)
+    setScreenSharingId(me?.id||"")
+
+    Object.values(me?.connections||{}).forEach((connection:any) => {
+        const videoTrack = stream?.getTracks().find(track => track.kind === "video");
+        connection[0].peerConnection.getSenders()[1].replaceTrack(videoTrack).catch((err:any)=>console.error(err))
+      });
+
+}
+
+
+const shareScreen = () => {
+    if (ScreenSharingId) {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(switchStream);
+    } else {
+      navigator.mediaDevices.getDisplayMedia({}).then(switchStream);
+    }
+  
+   
+
+
+  };
+
+
+/*
+  const shareScreen = () => {
+    if (ScreenSharingId) {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+        setStream(stream);
+        Object.values(peers).forEach((peer: any) => {
+          const call = me?.call(peer.peerId, stream);
+          if (call) {
+            call.on("stream", (peerStream: MediaStream) => {
+              dispatch(addPeerAction(peer.peerId, peerStream));
+            });
+          }
+        });
+      }).catch((error) => {
+        console.error("Error accessing screen share:", error);
+      });
+    } else {
+      navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then((stream) => {
+        setStream(stream);
+        Object.values(peers).forEach((peer: any) => {
+          const call = me?.call(peer.peerId, stream);
+          if (call) {
+            call.on("stream", (peerStream: MediaStream) => {
+              dispatch(addPeerAction(peer.peerId, peerStream));
+            });
+          }
+        });
+      }).catch((error) => {
+        console.error("Error accessing screen share:", error);
+      });
+    }
+  };
+  */
+
+
+
 
 /*
 npm install peer -g
@@ -84,10 +149,10 @@ call.on("stream",(peerStream)=>{
 
 },[me, stream])
 
-console.log({peers})
+
 
     return (
-        <RoomContext.Provider value={{ ws,me,stream,peers }}>
+        <RoomContext.Provider value={{ ws,me,stream,peers,shareScreen }}>
             {children}
         </RoomContext.Provider>
     );

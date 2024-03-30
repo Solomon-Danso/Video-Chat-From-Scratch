@@ -48,8 +48,14 @@ const joinRoom = ({roomId, peerId}: IRoomParams)=>{
 }
 
 const leaveRoom = ({peerId, roomId}:IRoomParams) => {
-    rooms[roomId] = rooms[roomId].filter(id=> id !== peerId)
-    socket.to(roomId).emit("user-disconnected",peerId)
+    try{
+        rooms[roomId] = rooms[roomId].filter(id=> id !== peerId)
+
+    }
+    catch(e){
+        console.error(e)
+    }
+        socket.to(roomId).emit("user-disconnected",peerId)
 }
 
 
